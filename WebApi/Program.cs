@@ -3,6 +3,7 @@ using Application.Common.Mappings;
 using Application.Interfaces;
 using DataAccess;
 using System.Reflection;
+using WebApi.MiddleWare;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,10 +28,11 @@ services.AddCors(options =>
 services.AddControllers();
 var app = builder.Build();
 
-// пайплайн или то, что будет использовать приложение
+// пайплайн или то, что будет использовать приложение, важно сохранять правильный порядок на будущее
+app.UseCustomExceptionHandler();
+app.UseRouting();
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");
-app.UseRouting();
 app.UseEndpoints(points => points.MapControllers()); // роутинг маппится на название контроллера и его методы
 
 // инициализация контекста
