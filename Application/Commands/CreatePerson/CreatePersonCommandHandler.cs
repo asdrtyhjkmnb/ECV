@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Application.Commands.CreatePerson
 {
-    public class CreatePersonCommandHandler : IRequestHandler<CreatePersonCommand, Guid>
+    public class CreatePersonCommandHandler : IRequestHandler<CreatePersonCommand, int>
     {
         private readonly IECVContext _context;
         public CreatePersonCommandHandler(IECVContext context) => _context = context;
@@ -16,12 +16,14 @@ namespace Application.Commands.CreatePerson
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task<Guid> Handle(CreatePersonCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(CreatePersonCommand request, CancellationToken cancellationToken)
         {
             var person = new Person
             {
-                Id = request.Id,
-                Created = request.CreatedAt
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                MiddleName = request.MiddleName,
+                Created = DateTime.Now
             };
             await this._context.Persons.AddAsync(person, cancellationToken);
             await this._context.SaveChangesAsync(cancellationToken);

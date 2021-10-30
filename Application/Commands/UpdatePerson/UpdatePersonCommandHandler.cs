@@ -13,10 +13,10 @@ namespace Application.Commands.UpdatePerson
 
         public async Task<Unit> Handle(UpdatePersonCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _context.Persons.FirstOrDefaultAsync(person => person.Id == request.Id, cancellationToken);
+            var entity = await _context.Persons.FirstOrDefaultAsync(person => person.Guid == request.Guid, cancellationToken);
             if (entity == null)
             {
-                throw new NotFoundException(nameof(Person), request.Id);
+                throw new NotFoundException(nameof(Person), request.Guid);
             }
 
             entity.FirstName = request.FirstName;

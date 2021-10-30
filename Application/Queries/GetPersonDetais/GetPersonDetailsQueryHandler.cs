@@ -14,19 +14,17 @@ namespace Application.Queries.GetPersonDetais
         public GetPersonDetailsQueryHandler(IECVContext context, IMapper mapper) => (_context, _mapper) = (context, mapper);
         public async Task<PersonDetailsViewModel> Handle(GetPersonDetailsQuery request, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrEmpty(request.FirstName) && string.IsNullOrEmpty(request.LastName))
+            if (request.Guid == Guid.Empty)
             {
-                throw new ArgumentException($"Ошибка запроса \"{nameof(GetPersonDetailsQuery)}\"");
+                throw new ArgumentException($"Ошибка запроса \"{nameof(GetPersonDetailsQuery)}\" - некорректный идентификатор поиска");
             }
 
-            var entity = await _context
-                .Persons
-                .FirstOrDefaultAsync(p =>
-                    p.FirstName == request.FirstName || p.LastName == request.LastName, cancellationToken);
+            var entity = await _context.Persons.FirstOrDefaultAsync(p => p.Guid == request.Guid);
 
             if (entity == null)
             {
-                throw new NotFoundException($"Сущность \"{nameof(Person)}\" не найдена в запросе \"{nameof(GetPersonDetailsQuery)}\"", request.FirstName);
+                throw new NotFoundException($"Сущность \"{nameof(Person)}\" не найдена в запросе \"{nameof(GetPersonDetailsQuery)}\"",
+                    request.Guid);
             }
 
             return _mapper.Map<PersonDetailsViewModel>(entity);

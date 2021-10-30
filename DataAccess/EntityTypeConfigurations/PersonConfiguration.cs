@@ -13,8 +13,10 @@ namespace DataAccess.EntityTypeConfigurations
 
         public void Configure(EntityTypeBuilder<Person> builder)
         {
+            builder.ToTable("Person", "core");
             // говорим, что Id - это наш ключ
             builder.HasKey(x => x.Id);
+            builder.Property(p => p.Guid);
         }
     }
 }

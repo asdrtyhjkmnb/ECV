@@ -15,6 +15,7 @@ namespace Application.Queries.GetPersonDetais
         public void Mapping(Profile profile)
         {
             profile.CreateMap<Person, PersonDetailsViewModel>()
+                .ForMember(view => view.Id, opt => opt.MapFrom(person => person.Guid))
                 .ForMember(view => view.FirstName, opt => opt.MapFrom(person => person.FirstName))
                 .ForMember(view => view.LastName, opt => opt.MapFrom(person => person.LastName))
                 .ForMember(view => view.MiddleName, opt => opt.MapFrom(person => person.MiddleName))
