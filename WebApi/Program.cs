@@ -2,6 +2,7 @@ using Application;
 using Application.Common.Mappings;
 using Application.Interfaces;
 using DataAccess;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Reflection;
 using WebApi.MiddleWare;
 
@@ -25,6 +26,20 @@ services.AddCors(options =>
         policy.AllowAnyMethod();
     });
 }); //позволяет кому угодно и как угодно посылать нам запросы. В последствии нужно создать правила
+
+services.AddAuthentication(config =>
+{
+    config.DefaultAuthenticateScheme =
+        JwtBearerDefaults.AuthenticationScheme;
+    config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+                .AddJwtBearer("Bearer", options =>
+                {
+                    options.Authority = "https://localhost:44386/";
+                    options.Audience = "ECVWebAPI";
+                    options.RequireHttpsMetadata = false;
+                });
+
 services.AddControllers();
 var app = builder.Build();
 
@@ -33,6 +48,8 @@ app.UseCustomExceptionHandler();
 app.UseRouting();
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseEndpoints(points => points.MapControllers()); // роутинг маппится на название контроллера и его методы
 
 // инициализация контекста

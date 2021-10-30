@@ -4,6 +4,7 @@ using Application.Commands.UpdatePerson;
 using Application.Queries.GetPersonDetais;
 using Application.Queries.GetPersonList;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Models.Persons;
 
@@ -20,6 +21,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<PersonViewModelList>> GetAll()
         {
             var query = new GetPersonListQuery();
@@ -29,6 +31,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("{guid}")]
+        [Authorize]
         public async Task<ActionResult<PersonDetailsViewModel>> Get(Guid guid)
         {
             var query = new GetPersonDetailsQuery
@@ -40,6 +43,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Guid>> Create([FromBody] CreatePersonDTO person)
         {
             var command = mapper.Map<CreatePersonCommand>(person);
@@ -47,7 +51,8 @@ namespace WebApi.Controllers
             return Ok(personId);
         }
 
-        [HttpPost]
+        [HttpPut]
+        [Authorize]
         public async Task<ActionResult<Guid>> Update([FromBody] UpdatePersonDTO person)
         {
             var command = mapper.Map<UpdatePersonCommand>(person);
@@ -56,6 +61,7 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("{guid}")]
+        [Authorize]
         public async Task<ActionResult<PersonDetailsViewModel>> Delete(Guid guid)
         {
             var command = new DeletePersonCommand()
